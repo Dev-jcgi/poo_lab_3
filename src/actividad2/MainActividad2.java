@@ -1,6 +1,7 @@
 package actividad2;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -67,44 +68,88 @@ public class MainActividad2 {
     }
 
     /**
-     * TODO 🔴 [1] Hacé que cada creador ejecute las acciones que SÍ puede hacer.
+     * Hace que cada creador ejecute las acciones que SÍ puede hacer.
      *
-     *   Todos pueden publicar. Pero además:
-     *     - si el creador sabe colaborar  -> que haga un feat con otro
-     *     - si sabe promocionar           -> que anuncie a la audiencia
-     *     - si sabe moderar               -> que bloquee haters de alguien
-     *
-     *   El problema: el parámetro es de tipo Creador, así que en tiempo de
-     *   compilación NO sabés si tiene esas habilidades.
-     *
-     *   Pista: investigá el operador  instanceof  y el casteo de tipos.
-     *
-     *       if (creador instanceof IColaboracion) {
-     *           IColaboracion colaborador = (IColaboracion) creador;
-     *           ...
-     *       }
-     *
-     *   PREGUNTA: ¿por qué NO alcanza con escribir creador.hacerFeat(otro)
-     *   directamente? Probalo y mirá el error del compilador.
+     * Todos pueden publicar. Además se usa instanceof para saber si el
+     * creador implementa alguna habilidad especial, y se lo castea a la
+     * interfaz correspondiente (no a la clase concreta) para invocarla.
      */
     public static void gestionarAgenda(Creador creador) {
         creador.publicarContenido();
 
-        // TODO 🔴 Agregá acá las acciones según las interfaces que implemente.
+        // Si sabe colaborar, hace un feat con el primer creador distinto a él.
+        if (creador instanceof IColaboracion) {
+            IColaboracion colaborador = (IColaboracion) creador;
+            Creador otro = buscarOtro(creador);
+            if (otro != null) {
+                colaborador.hacerFeat(otro);
+            }
+        }
+
+        // Si sabe promocionar, anuncia a toda la audiencia excepto él mismo.
+        if (creador instanceof IPromocion) {
+            IPromocion promotor = (IPromocion) creador;
+            String nombre = creador.getNombreUsuario();
+            Creador[] audiencia = creadores.stream()
+                    .filter(c -> !c.getNombreUsuario().equals(nombre))
+                    .toArray(Creador[]::new);
+            if (audiencia.length > 0) {
+                promotor.anunciarProducto(audiencia);
+            }
+        }
+
+        // Si sabe moderar, bloquea haters de un creador distinto a él.
+        if (creador instanceof IModeracion) {
+            IModeracion moderador = (IModeracion) creador;
+            Creador objetivo = buscarOtro(creador);
+            if (objetivo != null) {
+                moderador.bloquearHaters(objetivo);
+            }
+        }
+    }
+
+    /** Busca un creador distinto al dado, o null si no hay nadie más. */
+    private static Creador buscarOtro(Creador creador) {
+        String nombre = creador.getNombreUsuario();
+        for (Creador c : creadores) {
+            if (!c.getNombreUsuario().equals(nombre)) {
+                return c;
+            }
+        }
+        return null;
     }
 
     /**
-     * TODO 🔴 [2] Elegí al azar a quiénes les llega la promoción.
+     * Elegí al azar a quiénes les llega la promoción, excluyendo al promotor.
      *
-     *   Pasos sugeridos:
-     *     a) armá una lista con los creadores que NO son el promotor
-     *     b) elegí al azar cuántos serán impactados (entre 1 y esa cantidad)
-     *     c) seleccioná ese subconjunto al azar
-     *     d) convertilo a Creador[] y pasáselo a promotor.anunciarProducto(...)
-     *
-     *   Pista para (d): unaLista.toArray(new Creador[0])
+     * Usamos el nombre de usuario como identidad en vez de comparar referencias,
+     * porque el parámetro está tipado como interfaz IPromocion. Todos los
+     * implementadores son Creador, y cada Creador tiene un nombre de usuario único.
      */
     public static void simularEventoPromocion(IPromocion promotor) {
-        System.out.println("  [TODO: implementar simularEventoPromocion()]");
+        String nombrePromotor = ((Creador) promotor).getNombreUsuario();
+
+        List<Creador> posibles = new ArrayList<>();
+        for (Creador c : creadores) {
+            if (!c.getNombreUsuario().equals(nombrePromotor)) {
+                posibles.add(c);
+            }
+        }
+
+        if (posibles.isEmpty()) {
+            System.out.println("  No hay suficientes creadores para la promoción.");
+            return;
+        }
+
+        // Elegimos al azar cuántos impactar: de 1 a todos los disponibles.
+        int cantidad = 1 + random.nextInt(posibles.size());
+
+        // Mezclamos y tomamos los primeros 'cantidad'.
+        Collections.shuffle(posibles, random);
+        List<Creador> impactados = posibles.subList(0, cantidad);
+
+        // Convertimos a arreglo y lanzamos la promoción.
+        Creador[] audiencia = impactados.toArray(new Creador[0]);
+        promotor.anunciarProducto(audiencia);
     }
 }

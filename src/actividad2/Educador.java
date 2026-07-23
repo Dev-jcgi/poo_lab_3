@@ -22,36 +22,44 @@ package actividad2;
  */
 public class Educador extends Creador implements IPromocion, IModeracion {
 
-    // TODO 🟢 [1] Constante con el costo de energía de publicar un curso.
+    // Publicar un tutorial o curso requiere preparación de material didáctico.
+    private static final int COSTO_ENERGIA_CURSO = 22;
 
     public Educador(String nombreUsuario) {
         super(nombreUsuario);
     }
 
-    /**
-     * TODO 🔴 [2] Implementá la publicación de un tutorial o curso.
-     *   Misma regla de burnout que los demás. Efecto distinto al de los otros.
-     */
+    /** Publica un tutorial o mini curso. */
     @Override
     public void publicarContenido() {
-        System.out.println("  [TODO: implementar publicarContenido() de Educador]");
+        if (energia < COSTO_ENERGIA_CURSO) {
+            System.out.println("  Influencer agotado, estado burnout y no puede publicar");
+            return;
+        }
+        energia -= COSTO_ENERGIA_CURSO;
+        popularidad += 10;
+        System.out.println("  " + nombreUsuario + " lanza un tutorial de programación.");
+        System.out.println("  (+10 popularidad, -" + COSTO_ENERGIA_CURSO + " energia)");
     }
 
-    /**
-     * TODO 🟡 [3] Implementá la promoción (contrato IPromocion).
-     *   Recorré el arreglo de audiencia y aplicá el efecto a cada creador.
-     *   Pista: mirá cómo lo resolvió Gamer.anunciarProducto() y adaptalo.
-     */
+    /** Promociona una herramienta de aprendizaje a la audiencia. */
     @Override
     public void anunciarProducto(Creador[] audiencia) {
-        System.out.println("  [TODO: implementar anunciarProducto() de Educador]");
+        System.out.println("  " + nombreUsuario + " recomienda una plataforma de cursos online:");
+        for (Creador c : audiencia) {
+            c.modificarPopularidad(8);
+            System.out.println("    -> impacta a @" + c.getNombreUsuario() + " (+8 popularidad)");
+        }
     }
 
     /**
-     * TODO 🟡 [4] Implementá la moderación (contrato IModeracion).
+     * Moderación educativa: protege al objetivo de haters y le otorga
+     * algo de energía como representación de un ambiente más sano.
      */
     @Override
     public void bloquearHaters(Creador objetivo) {
-        System.out.println("  [TODO: implementar bloquearHaters() de Educador]");
+        objetivo.modificarEnergia(10);
+        System.out.println("  " + nombreUsuario + " activa moderación para @" + objetivo.getNombreUsuario());
+        System.out.println("  (@" + objetivo.getNombreUsuario() + " +10 energia)");
     }
 }

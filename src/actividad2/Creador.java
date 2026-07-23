@@ -52,14 +52,18 @@ public abstract class Creador {
     public abstract void publicarContenido();
 
     /**
-     * TODO 🟡 [1] Sumá los nuevos seguidores.
+     * Suma los nuevos seguidores y actualiza el nivel de la cuenta.
      *
-     *   Además, la cuenta debe SUBIR DE NIVEL: definí vos el criterio
-     *   (por ejemplo, un nivel más por cada 1000 seguidores) y documentalo
-     *   con un comentario. Es una decisión de diseño tuya.
+     * Decisión de diseño: se asume que cada 1000 seguidores acumulados
+     * suben un nivel. Como nivelCuenta empieza en 1, el nivel resultante
+     * es 1 + seguidoresTotales / 1000.
      */
     public void ganarSeguidores(int nuevos) {
-
+        if (nuevos < 0) {
+            throw new IllegalArgumentException("No se pueden ganar seguidores negativos");
+        }
+        this.seguidores += nuevos;
+        this.nivelCuenta = 1 + (this.seguidores / 1000);
     }
 
     /** YA RESUELTO — ejemplo de método concreto heredado por todas las subclases. */
@@ -76,4 +80,17 @@ public abstract class Creador {
     public void setPopularidad(int popularidad) { this.popularidad = popularidad; }
     public int getSeguidores() { return seguidores; }
     public int getNivelCuenta() { return nivelCuenta; }
+
+    /** Modifica la popularidad en la cantidad indicada (puede ser negativa). */
+    public void modificarPopularidad(int cantidad) {
+        this.popularidad += cantidad;
+    }
+
+    /**
+     * Modifica la energía en la cantidad indicada (puede ser negativa).
+     * Se evita que la energía quede por debajo de 0.
+     */
+    public void modificarEnergia(int cantidad) {
+        this.energia = Math.max(0, this.energia + cantidad);
+    }
 }

@@ -22,45 +22,45 @@ package actividad2;
  */
 public class Vlogger extends Creador implements IColaboracion, IModeracion {
 
-    // TODO 🟢 [1] Definí una constante con el costo de energía de publicar.
-    //             Elegí vos el valor y justificalo en un comentario.
+    // Un vlog de viaje requiere menos energía que un stream largo:
+    // edición en campo, tomas varias, pero no transmisión en vivo continua.
+    private static final int COSTO_ENERGIA_VLOG = 20;
 
     public Vlogger(String nombreUsuario) {
         super(nombreUsuario);
     }
 
-    /**
-     * TODO 🔴 [2] Implementá la publicación de un vlog.
-     *
-     *   Debe respetar la regla común:
-     *     - si no alcanza la energía, imprimir exactamente:
-     *       "  Influencer agotado, estado burnout y no puede publicar"
-     *     - si alcanza: descontar energía, sumar popularidad e informar
-     *       por consola qué pasó.
-     *
-     *   Que NO sea idéntico al del Gamer: un vlog de viaje no es un stream.
-     */
+    /** Publica un vlog de viaje o estilo de vida. */
     @Override
     public void publicarContenido() {
-        System.out.println("  [TODO: implementar publicarContenido() de Vlogger]");
+        if (energia < COSTO_ENERGIA_VLOG) {
+            System.out.println("  Influencer agotado, estado burnout y no puede publicar");
+            return;
+        }
+        energia -= COSTO_ENERGIA_VLOG;
+        popularidad += 12;
+        System.out.println("  " + nombreUsuario + " publica un vlog desde su último destino.");
+        System.out.println("  (+12 popularidad, -" + COSTO_ENERGIA_VLOG + " energia)");
     }
 
-    /**
-     * TODO 🟡 [3] Implementá la colaboración (contrato IColaboracion).
-     *   Pensá qué efecto tiene un vlog conjunto sobre el otro creador.
-     */
+    /** Colabora con otro creador en un vlog conjunto de viajes. */
     @Override
     public void hacerFeat(Creador otro) {
-        System.out.println("  [TODO: implementar hacerFeat() de Vlogger]");
+        otro.modificarPopularidad(8);
+        this.modificarPopularidad(6);
+        System.out.println("  " + nombreUsuario + " graba un vlog conjunto con " + otro.getNombreUsuario());
+        System.out.println("  (" + otro.getNombreUsuario() + " +8 popularidad, " + nombreUsuario + " +6)");
     }
 
     /**
-     * TODO 🟡 [4] Implementá la moderación (contrato IModeracion).
-     *   Debe PROTEGER al objetivo: por ejemplo, evitar que su popularidad
-     *   baje, o recuperarle parte de lo perdido. La regla la definís vos.
+     * Bloquea haters del objetivo, protegiendo su popularidad.
+     * Decisión de diseño: le restaura una pequeña cantidad de popularidad
+     * simulando que los comentarios negativos ya no impactan.
      */
     @Override
     public void bloquearHaters(Creador objetivo) {
-        System.out.println("  [TODO: implementar bloquearHaters() de Vlogger]");
+        objetivo.modificarPopularidad(5);
+        System.out.println("  " + nombreUsuario + " bloquea haters de @" + objetivo.getNombreUsuario());
+        System.out.println("  (@" + objetivo.getNombreUsuario() + " +5 popularidad por moderación)");
     }
 }

@@ -63,23 +63,25 @@ public class MainActividad1 {
     }
 
     /**
-     * TODO 🔴 [1] Implementá el criterio del duelo.
+     * Implementa el criterio del duelo.
      *
-     *   Reglas del enunciado:
-     *     - Gana el soldado con MAYOR nivel de autoridad en su rango.
-     *     - Si ambos tienen el mismo rango => "Empate".
-     *
-     *   Ya está resuelta la impresión de los dos soldados. Lo que falta es
-     *   comparar y decidir el resultado.
+     * Reglas del enunciado:
+     *   - Gana el soldado con MAYOR nivel de autoridad en su rango.
+     *   - Si ambos tienen el mismo rango => "Empate".
      */
     public static void simularDuelo(Soldado s1, Soldado s2) {
         System.out.println(" Soldado 1:  " + s1);
         System.out.println(" Soldado 2:  " + s2);
 
-        // TODO 🔴 Compará los niveles de autoridad e imprimí una de estas líneas:
-        //           " Ganador Soldado 1"
-        //           " Ganador Soldado 2"
-        //           " Empate"
-        System.out.println(" [TODO: falta implementar simularDuelo()]");
+        int nivel1 = s1.getRango().getNivelAutoridad();
+        int nivel2 = s2.getRango().getNivelAutoridad();
+
+        if (nivel1 > nivel2) {
+            System.out.println(" Ganador Soldado 1");
+        } else if (nivel2 > nivel1) {
+            System.out.println(" Ganador Soldado 2");
+        } else {
+            System.out.println(" Empate");
+        }
     }
 }
