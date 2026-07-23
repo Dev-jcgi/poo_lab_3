@@ -81,13 +81,16 @@ public abstract class Creador {
     public int getSeguidores() { return seguidores; }
     public int getNivelCuenta() { return nivelCuenta; }
 
-    /** Aumenta (o disminuye) la popularidad encapsulando el cambio de estado. */
-    public void aumentarPopularidad(int cantidad) {
+    /** Modifica la popularidad en la cantidad indicada (puede ser negativa). */
+    public void modificarPopularidad(int cantidad) {
         this.popularidad += cantidad;
     }
 
-    /** Aumenta (o disminuye) la energía, sin permitir valores negativos. */
-    public void aumentarEnergia(int cantidad) {
+    /**
+     * Modifica la energía en la cantidad indicada (puede ser negativa).
+     * Se evita que la energía quede por debajo de 0.
+     */
+    public void modificarEnergia(int cantidad) {
         this.energia = Math.max(0, this.energia + cantidad);
     }
 }

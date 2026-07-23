@@ -86,11 +86,12 @@ public class MainActividad2 {
             }
         }
 
-        // Si sabe promocionar, anuncia a toda la audiencia (usado también en agenda).
+        // Si sabe promocionar, anuncia a toda la audiencia excepto él mismo.
         if (creador instanceof IPromocion) {
             IPromocion promotor = (IPromocion) creador;
+            String nombre = creador.getNombreUsuario();
             Creador[] audiencia = creadores.stream()
-                    .filter(c -> c != creador)
+                    .filter(c -> !c.getNombreUsuario().equals(nombre))
                     .toArray(Creador[]::new);
             if (audiencia.length > 0) {
                 promotor.anunciarProducto(audiencia);
@@ -109,8 +110,9 @@ public class MainActividad2 {
 
     /** Busca un creador distinto al dado, o null si no hay nadie más. */
     private static Creador buscarOtro(Creador creador) {
+        String nombre = creador.getNombreUsuario();
         for (Creador c : creadores) {
-            if (c != creador) {
+            if (!c.getNombreUsuario().equals(nombre)) {
                 return c;
             }
         }

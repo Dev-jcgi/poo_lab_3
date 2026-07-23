@@ -54,8 +54,8 @@ public class Gamer extends Creador implements IColaboracion, IPromocion {
     /** Implementación del contrato IColaboracion. */
     @Override
     public void hacerFeat(Creador otro) {
-        otro.aumentarPopularidad(10);
-        this.aumentarPopularidad(5);
+        otro.modificarPopularidad(10);
+        this.modificarPopularidad(5);
         System.out.println("  " + nombreUsuario + " juega en co-op con " + otro.getNombreUsuario());
         System.out.println("  (" + otro.getNombreUsuario() + " +10 popularidad, " + nombreUsuario + " +5)");
     }
@@ -65,7 +65,7 @@ public class Gamer extends Creador implements IColaboracion, IPromocion {
     public void anunciarProducto(Creador[] audiencia) {
         System.out.println("  " + nombreUsuario + " promociona una marca de perifericos:");
         for (Creador c : audiencia) {
-            c.aumentarEnergia(10);
+            c.modificarEnergia(10);
             System.out.println("    -> impacta a @" + c.getNombreUsuario() + " (+10 energia)");
         }
     }

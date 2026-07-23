@@ -46,8 +46,8 @@ public class Vlogger extends Creador implements IColaboracion, IModeracion {
     /** Colabora con otro creador en un vlog conjunto de viajes. */
     @Override
     public void hacerFeat(Creador otro) {
-        otro.aumentarPopularidad(8);
-        this.aumentarPopularidad(6);
+        otro.modificarPopularidad(8);
+        this.modificarPopularidad(6);
         System.out.println("  " + nombreUsuario + " graba un vlog conjunto con " + otro.getNombreUsuario());
         System.out.println("  (" + otro.getNombreUsuario() + " +8 popularidad, " + nombreUsuario + " +6)");
     }
@@ -59,7 +59,7 @@ public class Vlogger extends Creador implements IColaboracion, IModeracion {
      */
     @Override
     public void bloquearHaters(Creador objetivo) {
-        objetivo.aumentarPopularidad(5);
+        objetivo.modificarPopularidad(5);
         System.out.println("  " + nombreUsuario + " bloquea haters de @" + objetivo.getNombreUsuario());
         System.out.println("  (@" + objetivo.getNombreUsuario() + " +5 popularidad por moderación)");
     }
