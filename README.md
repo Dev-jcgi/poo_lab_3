@@ -1,14 +1,13 @@
-# Plantilla de Actividades 1 y 2
+# Laboratorio 3 — Actividades 1 y 2
 ### Enum type · Clases abstractas · Interfaces
 
-Proyecto Java **que ya compila y ejecuta tal como está**. Tu tarea es
-completar los `TODO` marcados en el código.
+Este proyecto Java **ya compila y corre**, pero el estudiante debe completar varias clases e implementar la lógica que falta. A continuación se indica **qué debés hacer**, **en qué archivos** y **cómo probarlo**.
 
-## Cómo empezar
+---
 
-1. Abrí la carpeta en IntelliJ IDEA (`File → Open` → seleccioná esta carpeta).
-2. Abrí `guia/guia-actividades.html` con doble clic: es tu checklist de trabajo.
-3. **Ejecutá antes de escribir nada**, para ver el punto de partida:
+## 1. Cómo probar el proyecto
+
+Abrí una terminal en la carpeta raíz y ejecutá:
 
 ```bash
 mkdir out
@@ -18,48 +17,69 @@ java -cp out actividad1.MainActividad1
 java -cp out actividad2.MainActividad2
 ```
 
-Vas a ver mensajes `[TODO]` señalando qué falta. Cada vez que resolvés algo,
-volvé a ejecutar: un mensaje menos es progreso visible.
+Cada vez que completes algo, volvé a correr estos comandos. Si hay `[TODO]` en la consola, significa que todavía falta trabajo.
 
-## Cómo está armada
+---
 
-Por cada concepto hay **una clase ya resuelta** que sirve de modelo, y otra
-vacía donde replicás el patrón. No copies: leé la resuelta, entendé por qué
-está escrita así, y después escribí la tuya.
+## 2. Qué debés completar
 
-| Archivo | Estado |
+### Actividad 1 — Simulador táctico militar
+
+Objetivo: practicar `enum` con constructor, inmutabilidad, generación de combinaciones y lógica de comparación.
+
+| Archivo | Qué debés hacer |
 |---|---|
-| `actividad1/Especialidad.java` | ✅ **Resuelto** — modelo de enum con constructor |
-| `actividad1/Rango.java` | ⬜ Completar (replicá el patrón de Especialidad) |
-| `actividad1/Soldado.java` | ⬜ Completar (inmutabilidad) |
-| `actividad1/Peloton.java` | ⬜ Completar (combinaciones + aleatoriedad) |
-| `actividad1/MainActividad1.java` | ⬜ Completar (lógica del duelo) |
-| `actividad2/Creador.java` | 🟨 Parcial — clase abstracta, falta un método |
-| `actividad2/I*.java` (3 archivos) | ✅ **Resueltos** — los contratos |
-| `actividad2/Gamer.java` | ✅ **Resuelto** — modelo de herencia + 2 interfaces |
-| `actividad2/Vlogger.java` | ⬜ Completar |
-| `actividad2/Educador.java` | ⬜ Completar |
-| `actividad2/MainActividad2.java` | ⬜ Completar (polimorfismo) |
+| `src/actividad1/Rango.java` | Agregar el **nivel de autoridad** a cada rango: `CABO=1`, `SARGENTO=2`, `TENIENTE=3`, `CAPITAN=4`. Replicá el patrón de `Especialidad.java` (constructor privado + atributo `final` + getter). |
+| `src/actividad1/Soldado.java` | Hacer la clase **inmutable**: atributos `private final`, asignados solo en el constructor, sin setters. |
+| `src/actividad1/Peloton.java` | Generar las **16 combinaciones** de especialidad × rango usando bucles sobre `Especialidad.values()` y `Rango.values()`, y mezclar la lista. |
+| `src/actividad1/MainActividad1.java` | Implementar la lógica del duelo en `simularDuelo()`: compara los niveles de autoridad y muestra `Ganador Soldado 1`, `Ganador Soldado 2` o `Empate`. |
 
-## Semáforo de los TODO
+Salida esperada (ejemplo):
 
-| Marca | Significa |
+```
+Soldado 1:  CABO INFANTERIA
+Soldado 2:  CAPITAN INGENIERO
+Ganador Soldado 2
+```
+
+### Actividad 2 — Red social de creadores
+
+Objetivo: practicar clases abstractas, interfaces, polimorfismo y `instanceof` + casteo a interfaz.
+
+| Archivo | Qué debés hacer |
 |---|---|
-| 🟢 | Mecánico: ya sabés hacerlo, es teclear |
-| 🟡 | Requiere entender el concepto |
-| 🔴 | Decisión de diseño tuya — documentala con un comentario |
+| `src/actividad2/Vlogger.java` | Completar `publicarContenido()`, `hacerFeat()` y `bloquearHaters()`. Un vlogger colabora y modera. Que su implementación sea **distinta** a la de `Gamer` y `Educador`. |
+| `src/actividad2/Educador.java` | Completar `publicarContenido()`, `anunciarProducto()` y `bloquearHaters()`. Un educador promociona y modera, pero **no colabora**. |
+| `src/actividad2/MainActividad2.java` | Completar `gestionarAgenda()` y `simularEventoPromocion()`. Usá `instanceof` + casteo a la **interfaz**, no a la clase concreta. En la promoción, elegí un subconjunto aleatorio que **excluya al promotor**. |
 
-## Antes de entregar
+Reglas importantes:
 
-- [ ] El proyecto compila sin errores
-- [ ] No queda ningún `[TODO:` en la salida por consola
-- [ ] Las tres subclases de `Creador` tienen implementaciones **distintas**
-- [ ] Comentaste tus decisiones de diseño (los 🔴)
-- [ ] Podés responder las preguntas de comprensión de la guía
+- Todo creador que publique sin energía suficiente debe mostrar exactamente:
+  ```
+  Influencer agotado, estado burnout y no puede publicar
+  ```
+- Cada subclase de `Creador` debe tener una implementación **distinta** de `publicarContenido()`.
+- Las interfaces definen las habilidades; la clase abstracta define el estado común.
 
-Ese último punto no es opcional: la entrega puede ir acompañada de una
-**defensa oral**. Las preguntas están en la guía y en los comentarios del
-código, así que no hay sorpresa. Si tu programa funciona pero no podés
-explicar por qué escribiste una línea, esa línea no suma puntaje.
+---
 
-Los criterios completos están en `RUBRICA.md`.
+## 3. Archivos que ya están resueltos (usalos como modelo)
+
+- `src/actividad1/Especialidad.java` — enum con constructor.
+- `src/actividad2/Creador.java` — clase abstracta con atributos y métodos comunes.
+- `src/actividad2/Gamer.java` — modelo de herencia + dos interfaces.
+- `src/actividad2/IColaboracion.java`, `IModeracion.java`, `IPromocion.java` — contratos.
+
+---
+
+## 4. Qué entregar
+
+Antes de dar por terminado el laboratorio, verificá esto:
+
+- [ ] El proyecto compila sin errores (`javac` termina sin mensajes de error).
+- [ ] No queda ningún `[TODO:` en la salida por consola.
+- [ ] Las tres subclases de `Creador` (`Gamer`, `Vlogger`, `Educador`) tienen implementaciones **distintas**.
+- [ ] Documentaste con comentarios las decisiones de diseño que te correspondan.
+- [ ] Podés responder las preguntas de comprensión que aparecen en los comentarios del código.
+
+Los criterios de evaluación completos están en `RUBRICA.md`.
