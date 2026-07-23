@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Actividades · Enums, Clases Abstractas e Interfaces</title>
+<style>
+  :root{
+    --bg:#0B1026; --bg2:#111834; --panel:#151d3d; --line:#26315c;
+    --cyan:#4FD1C5; --purple:#A78BFA; --amber:#FBBF24; --red:#F87171; --green:#86EFAC;
+    --ink:#E7EAF6; --dim:#9AA3C7;
+    --mono:'Consolas','Courier New',monospace; --sans:'Segoe UI',system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh;
+    background-image:radial-gradient(circle at 12% 6%, rgba(79,209,197,.09), transparent 42%),
+                     radial-gradient(circle at 88% 12%, rgba(167,139,250,.09), transparent 45%);}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
+
+  header{padding:48px 24px 26px;text-align:center;}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--amber);}
+  h1{font-family:var(--mono);font-size:clamp(24px,4.4vw,40px);margin:12px 0 10px;font-weight:700;
+     background:linear-gradient(120deg,var(--cyan),var(--purple) 55%,var(--amber));
+     -webkit-background-clip:text;background-clip:text;color:transparent;}
+  .sub{color:var(--dim);max-width:620px;margin:0 auto;line-height:1.6;font-size:15px;}
+
+  .progress-wrap{max-width:520px;margin:26px auto 0;}
+  .ptrack{height:9px;background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden;}
+  .pfill{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--amber));transition:width .4s cubic-bezier(.4,0,.2,1);}
+  .plabel{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:8px;text-align:center;}
+
+  .wrap{max-width:980px;margin:0 auto;padding:28px 20px 80px;}
+
+  .act{background:var(--bg2);border:1px solid var(--line);border-radius:16px;margin-bottom:30px;overflow:hidden;}
+  .act-head{padding:22px 26px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .act-num{width:48px;height:48px;border-radius:13px;background:var(--panel);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:20px;font-weight:700;color:var(--amber);flex-shrink:0;}
+  .act-head h2{font-family:var(--mono);font-size:19px;}
+  .act-head .tag{font-family:var(--mono);font-size:11px;color:var(--cyan);letter-spacing:.1em;text-transform:uppercase;}
+  .act-body{padding:24px 26px 28px;}
+
+  .lead{color:var(--dim);font-size:14.5px;line-height:1.7;margin-bottom:20px;}
+  .lead strong{color:var(--amber);}
+
+  h3.sec{font-family:var(--mono);font-size:12.5px;color:var(--purple);text-transform:uppercase;
+    letter-spacing:.08em;margin:24px 0 12px;}
+  h3.sec:first-child{margin-top:0;}
+
+  /* --- semáforo --- */
+  .legend{display:flex;gap:16px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);
+    border-radius:11px;padding:14px 18px;margin-bottom:22px;}
+  .lg{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--dim);}
+  .dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+  .d-g{background:var(--green);} .d-y{background:var(--amber);} .d-r{background:var(--red);}
+
+  /* --- checklist --- */
+  .file-group{margin-bottom:18px;border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  .file-head{background:var(--panel);padding:11px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .file-name{font-family:var(--mono);font-size:13.5px;color:var(--ink);font-weight:600;}
+  .file-badge{font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:20px;letter-spacing:.05em;}
+  .b-model{background:rgba(134,239,172,.12);color:var(--green);border:1px solid rgba(134,239,172,.4);}
+  .b-todo{background:rgba(251,191,36,.12);color:var(--amber);border:1px solid rgba(251,191,36,.4);}
+  .file-count{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--dim);}
+
+  .task{display:flex;gap:12px;padding:12px 16px;border-top:1px solid var(--line);cursor:pointer;
+    transition:background .15s;align-items:flex-start;}
+  .task:hover{background:rgba(167,139,250,.05);}
+  .box{width:19px;height:19px;border:2px solid var(--line);border-radius:5px;flex-shrink:0;margin-top:1px;
+    display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent;transition:.15s;}
+  .task.done .box{background:var(--cyan);border-color:var(--cyan);color:#08251f;}
+  .task.done .tx{text-decoration:line-through;opacity:.5;}
+  .tx{font-size:13.5px;line-height:1.5;}
+  .tx code{font-family:var(--mono);font-size:12.5px;color:var(--green);background:rgba(134,239,172,.08);
+    padding:1px 5px;border-radius:4px;}
+
+  /* --- preguntas --- */
+  details.q{background:var(--panel);border:1px solid var(--line);border-radius:11px;margin-bottom:10px;overflow:hidden;}
+  details.q summary{padding:13px 16px;cursor:pointer;list-style:none;display:flex;gap:11px;align-items:flex-start;
+    font-size:13.5px;transition:background .15s;}
+  details.q summary::-webkit-details-marker{display:none;}
+  details.q summary:hover{background:rgba(167,139,250,.06);}
+  details.q[open] summary{border-bottom:1px solid var(--line);}
+  .qmark{width:22px;height:22px;border-radius:50%;background:var(--purple);color:#fff;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;}
+  .qbody{padding:14px 16px 16px 49px;font-size:13px;color:var(--dim);line-height:1.65;}
+  .qbody strong{color:var(--amber);}
+
+  .callout{background:var(--panel);border-left:3px solid var(--cyan);padding:13px 16px;
+    border-radius:0 10px 10px 0;font-size:13.5px;color:var(--dim);line-height:1.6;margin:16px 0;}
+  .callout.warn{border-left-color:var(--red);}
+  .callout.exp{border-left-color:var(--amber);}
+  .callout b{color:var(--ink);}
+
+  pre.code{background:#0c1130;border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+    font-family:var(--mono);font-size:12.5px;line-height:1.65;overflow-x:auto;color:var(--ink);margin:12px 0;}
+  .kw{color:#7DD3FC;} .str{color:var(--green);} .cmt{color:#6B7394;font-style:italic;} .an{color:var(--amber);}
+
+  .reset{display:block;margin:0 auto;background:var(--panel);border:1px solid var(--line);color:var(--dim);
+    font-family:var(--mono);font-size:12px;padding:10px 20px;border-radius:9px;cursor:pointer;transition:.2s;}
+  .reset:hover{color:var(--red);border-color:var(--red);}
+
+  footer{text-align:center;color:var(--dim);font-family:var(--mono);font-size:11px;padding:24px 20px 50px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Programación Orientada a Objetos · Entrega</div>
+  <h1>Guía de Actividades 1 y 2</h1>
+  <p class="sub">Enum type, clases abstractas e interfaces. Esta guía acompaña la plantilla de código:
+     marcá cada tarea a medida que la completes.</p>
+  <div class="progress-wrap">
+    <div class="ptrack"><div class="pfill" id="pfill"></div></div>
+    <div class="plabel" id="plabel">0 de 0 tareas completadas</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="legend">
+    <div class="lg"><span class="dot d-g"></span> Mecánico — sabés hacerlo, es teclear</div>
+    <div class="lg"><span class="dot d-y"></span> Requiere entender el concepto</div>
+    <div class="lg"><span class="dot d-r"></span> Decisión de diseño tuya</div>
+  </div>
+
+  <div class="callout">
+    <b>Cómo está armada la plantilla.</b> Por cada concepto nuevo hay <b>una clase ya resuelta</b>
+    que funciona como modelo, y otra vacía donde tenés que replicar el patrón.
+    No copies: leé la resuelta, entendé <em>por qué</em> está escrita así, y recién ahí escribí la tuya.
+  </div>
+
+  <div class="callout exp">
+    <b>Empezá ejecutando.</b> La plantilla compila y corre tal como te la entregan.
+    Al ejecutarla vas a ver mensajes <code style="font-family:var(--mono);color:var(--amber);">[TODO]</code>
+    que te indican exactamente qué falta. Cada vez que resolvés algo, volvé a ejecutar:
+    un mensaje menos es progreso visible.
+  </div>
+
+  <!-- ==================== ACTIVIDAD 1 ==================== -->
+  <div class="act">
+    <div class="act-head">
+      <div class="act-num">1</div>
+      <div>
+        <div class="tag">Enum type</div>
+        <h2>Simulador de despliegue táctico</h2>
+      </div>
+    </div>
+    <div class="act-body">
+      <p class="lead">Una unidad de fuerzas especiales simula duelos individuales entre soldados.
+        Cada soldado tiene una <strong>especialidad</strong> y un <strong>rango</strong>, y el duelo
+        lo gana quien tenga mayor nivel de autoridad.</p>
+
+      <h3 class="sec">Punto de partida: leé el modelo</h3>
+      <div class="callout">
+        <b>Especialidad.java ya está resuelto.</b> Antes de escribir una línea, abrilo y fijate en
+        tres cosas: el punto y coma después de la última constante, que el constructor no lleva
+        <code style="font-family:var(--mono);color:#7DD3FC;">public</code>, y que el atributo es
+        <code style="font-family:var(--mono);color:#7DD3FC;">final</code>.
+      </div>
+
+      <pre class="code"><span class="kw">public</span> <span class="kw">enum</span> Especialidad {
+
+    INFANTERIA(<span class="str">"INF"</span>),
+    MEDICO(<span class="str">"MED"</span>),
+    INGENIERO(<span class="str">"ING"</span>),
+    FRANCOTIRADOR(<span class="str">"FRA"</span>);   <span class="cmt">// &lt;-- punto y coma OBLIGATORIO</span>
+
+    <span class="kw">private</span> <span class="kw">final</span> <span class="kw">String</span> sigla;
+
+    Especialidad(<span class="kw">String</span> sigla) {   <span class="cmt">// constructor implícitamente privado</span>
+        <span class="kw">this</span>.sigla = sigla;
+    }
+
+    <span class="kw">public</span> <span class="kw">String</span> getSigla() { <span class="kw">return</span> sigla; }
+}</pre>
+
+      <h3 class="sec">Tareas</h3>
+
+      <div class="file-group">
+        <div class="file-head">
+          <span class="file-name">Rango.java</span>
+          <span class="file-badge b-todo">completar</span>
+          <span class="file-count" data-count>0/4</span>
+        </div>
+        <div class="task" data-id="a1r1"><div class="box">✓</div><div class="tx"><span class="dot d-g" style="display:inline-block;margin-right:6px;"></span>Agregar el nivel de autoridad a cada constante: <code>CABO(1)</code>, <code>SARGENTO(2)</code>…</div></div>
+        <div class="task" data-id="a1r2"><div class="box">✓</div><div class="tx"><span class="dot d-y" style="display:inline-block;margin-right:6px;"></span>Declarar el atributo que guarda el nivel, con el modificador que impide reasignarlo</div></div>
+        <div class="task" data-id="a1r3"><div class="box">✓</div><div class="tx"><span class="dot d-y" style="display:inline-block;margin-right:6px;"></span>Escribir el constructor (recordá: sin <code>public</code>)</div></div>
+        <div class="task" data-id="a1r4"><div class="box">✓</div><div class="tx"><span class="dot d-g" style="display:inline-block;margin-right:6px;"></span>Hacer que <code>getNivelAutoridad()</code> devuelva el nivel real en vez de 0</div></div>
+      </div>
+
+      <div class="file-group">
+        <div class="file-head">
+          <span class="file-name">Soldado.java</span>
+          <span class="file-badge b-todo">completar</span>
+          <span class="file-count" data-count>0/5</span>
+        </div>
+        <div class="task" data-id="a1s1"><div class="box">✓</div><div class="tx"><span class="dot d-y" style="display:inline-block;margin-right:6px;"></span>Declarar los dos atributos de forma que <b>no se puedan reasignar</b></div></div>
+        <div class="task" data-id="a1s2"><div class="box">✓</div><div class="tx"><span class="dot d-g" style="display:inline-block;margin-right:6px;"></span>Asignarlos en el constructor</div></div>
+        <div class="task" data-id="a1s3"><div class="box">✓</div><div class="tx"><span class="dot d-g" style="display:inline-block;margin-right:6px;"></span><code>getEspecialidad()</code> devuelve el valor real</div></div>
+        <div class="task" data-id="a1s4"><div class="box">✓</div><div class="tx"><span class="dot d-g" style="display:inline-block;margin-right:6px;"></span><code>getRango()</code> devuelve el valor real</div></div>
+        <div class="task" data-id="a1s5"><div class="box">✓</div><div class="tx"><span class="dot d-y" style="display:inline-block;margin-right:6px;"></span><code>toString()</code> con el formato <code>"CAPITAN INGENIERO"</code></div></div>
+      </div>
+
+      <div class="file-group">
+        <div class="file-head">
+          <span class="file-name">Peloton.java</span>
+          <span class="file-badge b-todo">completar</span>
+          <span class="file-count" data-count>0/4</span>
+        </div>
+        <div class="task" data-id="a1p1"><div class="box">✓</div><div class="tx"><span class="dot d-y" style="display:inline-block;margin-right:6px;"></span>Generar las 16 combinaciones con un <b>for-each anidado</b> sobre <code>values()</code></div></div>
+        <div class="task" data-id="a1p2"><div class="box">✓</div><div class="tx"><span class="dot d-g" style="display:inline-block;margin-right:6px;"></span>Llamar a <code>mezclarPeloton()</code> al final del constructor</div></div>
+        <div class="task" data-id="a1p3"><div class="box">✓</div><div class="tx"><span class="dot d-g" style="display:inline-block;margin-right:6px;"></span>Implementar <code>mezclarPeloton()</code> (buscá el método de <code>Collections</code>)</div></div>
+        <div class="task" data-id="a1p4"><div class="box">✓</div><div class="tx"><span class="dot d-y" style="display:inline-block;margin-right:6px;"></span><code>obtenerSoldadoAleatorio()</code> sin salirse del rango de la lista</div></div>
+      </div>
+
+      <div class="file-group">
+        <div class="file-head">
+          <span class="file-name">MainActividad1.java</span>
+          <span class="file-badge b-todo">completar</span>
+          <span class="file-count" data-count>0/1</span>
+        </div>
+        <div class="task" data-id="a1m1"><div class="box">✓</div><div class="tx"><span class="dot d-r" style="display:inline-block;margin-right:6px;"></span>Implementar <code>simularDuelo()</code>: mayor nivel gana, mismo rango es empate</div></div>
+      </div>
+
+      <h3 class="sec">Preguntas de comprensión</h3>
+      <details class="q">
+        <summary><span class="qmark">?</span><span>¿Qué error da <code>new Especialidad("XYZ")</code> y por qué es bueno que falle?</span></summary>
+        <div class="qbody">Pista para pensarlo: ¿cuántas instancias de <strong>Especialidad</strong> deberían existir
+        en todo el programa? ¿Qué pasaría si cualquiera pudiera fabricar una quinta especialidad
+        en tiempo de ejecución? Probalo en el código y leé el mensaje del compilador.</div>
+      </details>
+      <details class="q">
+        <summary><span class="qmark">?</span><span>¿Por qué guardar el nivel como atributo del enum en vez de resolverlo con un <code>switch</code>?</span></summary>
+        <div class="qbody">Imaginá que mañana agregan el rango <strong>CORONEL</strong>. Con el atributo,
+        agregás una línea. Con el <code style="font-family:var(--mono)">switch</code>, tenés que acordarte de
+        actualizar todos los <code style="font-family:var(--mono)">switch</code> del proyecto — y si te olvidás de uno,
+        el compilador no te avisa.</div>
+      </details>
+      <details class="q">
+        <summary><span class="qmark">?</span><span>¿Qué problema traería agregarle un <code>setRango()</code> a <code>Soldado</code>?</span></summary>
+        <div class="qbody">Pensá en el momento del duelo: si dos partes del programa tienen una referencia
+        al mismo soldado y una lo modifica en medio de la comparación, el resultado deja de ser
+        predecible. La <strong>inmutabilidad</strong> elimina esa clase entera de errores.</div>
+      </details>
+      <details class="q">
+        <summary><span class="qmark">?</span><span>¿Qué hace <code>ordinal()</code> y qué riesgo tiene apoyarse en él?</span></summary>
+        <div class="qbody">Investigalo en la documentación. Después preguntate: ¿qué pasa con tu programa
+        si alguien reordena alfabéticamente las constantes del enum? Con
+        <code style="font-family:var(--mono)">getNivelAutoridad()</code> no pasa nada; con
+        <code style="font-family:var(--mono)">ordinal()</code>, la lógica se rompe en silencio.</div>
+      </details>
+    </div>
+  </div>
+
+  <!-- ==================== ACTIVIDAD 2 ==================== -->
+  <div class="act">
+    <div class="act-head">
+      <div class="act-num">2</div>
+      <div>
+        <div class="tag">Clases abstractas · Interfaces</div>
+        <h2>Red social de creadores de contenido</h2>
+      </div>
+    </div>
+    <div class="act-body">
+      <p class="lead">Todos los creadores comparten atributos comunes (seguidores, energía, popularidad),
+        pero cada nicho tiene <strong>habilidades distintas</strong>. Esa diferencia es exactamente la que
+        separa una <strong>clase abstracta</strong> de una <strong>interfaz</strong>.</p>
+
+      <div class="callout">
+        <b>La idea central de esta actividad.</b> Lo que todos <em>son</em> va en la clase abstracta
+        (<code style="font-family:var(--mono);color:#7DD3FC;">Creador</code>: nombre, seguidores, energía).
+        Lo que solo algunos <em>pueden hacer</em> va en interfaces
+        (<code style="font-family:var(--mono);color:#7DD3FC;">IColaboracion</code>,
+        <code style="font-family:var(--mono);color:#7DD3FC;">IPromocion</code>,
+        <code style="font-family:var(--mono);color:#7DD3FC;">IModeracion</code>).
+      </div>
+
+      <h3 class="sec">Quién puede hacer qué</h3>
+      <pre class="code">                 IColaboracion   IPromocion   IModeracion
+  Gamer               ✔               ✔             —
+  Vlogger             ✔               —             ✔
+  Educador            —               ✔             ✔</pre>
+
+      <div class="callout warn">
+        <b>Java no permite heredar de dos clases.</b> Un Gamer no puede
+        <code style="font-family:var(--mono);color:#7DD3FC;">extends</code> Creador y Promotor a la vez.
+        Pero <b>sí</b> puede implementar todas las interfaces que necesite. Esa es la forma en que Java
+        resuelve lo que en otros lenguajes sería herencia múltiple — y es el motivo de que esta actividad exista.
+      </div>
+
+      <h3 class="sec">Punto de partida: leé el modelo</h3>
+      <pre class="code"><span class="kw">public</span> <span class="kw">class</span> Gamer <span class="kw">extends</span> Creador <span class="kw">implements</span> IColaboracion, IPromocion {
+        <span class="cmt">//          └── UNA sola clase ──┘        └── VARIAS interfaces ──┘</span>
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="kw">void</span> publicarContenido() { ... }   <span class="cmt">// viene de la clase abstracta</span>
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="kw">void</span> hacerFeat(Creador otro) { ... }  <span class="cmt">// viene de IColaboracion</span>
+
+    <span class="an">@Override</span>
+    <span class="kw">public</span> <span class="kw">void</span> anunciarProducto(Creador[] audiencia) { ... }  <span class="cmt">// viene de IPromocion</span>
+}</pre>
+
+      <h3 class="sec">Tareas</h3>
+
+      <div class="file-group">
+        <div class="file-head">
+          <span class="file-name">Creador.java</span>
+          <span class="file-badge b-model">parcialmente resuelto</span>
+          <span class="file-count" data-count>0/1</span>
+        </div>
+        <div class="task" data-id="a2c1"><div class="box">✓</div><div class="tx"><span class="dot d-y" style="display:inline-block;margin-right:6px;"></span>Implementar <code>ganarSeguidores()</code> y definir tu criterio de subida de nivel</div></div>
+      </div>
+
+      <div class="file-group">
+        <div class="file-head">
+          <span class="file-name">Vlogger.java</span>
+          <span class="file-badge b-todo">completar</span>
+          <span class="file-count" data-count>0/4</span>
+        </div>
+        <div class="task" data-id="a2v1"><div class="box">✓</div><div class="tx"><span class="dot d-g" style="display:inline-block;margin-right:6px;"></span>Definir la constante de costo de energía</div></div>
+        <div class="task" data-id="a2v2"><div class="box">✓</div><div class="tx"><span class="dot d-r" style="display:inline-block;margin-right:6px;"></span><code>publicarContenido()</code> con la regla de burnout y un efecto <b>distinto</b> al del Gamer</div></div>
+        <div class="task" data-id="a2v3"><div class="box">✓</div><div class="tx"><span class="dot d-y" style="display:inline-block;margin-right:6px;"></span><code>hacerFeat()</code> — contrato IColaboracion</div></div>
+        <div class="task" data-id="a2v4"><div class="box">✓</div><div class="tx"><span class="dot d-y" style="display:inline-block;margin-right:6px;"></span><code>bloquearHaters()</code> — contrato IModeracion</div></div>
+      </div>
+
+      <div class="file-group">
+        <div class="file-head">
+          <span class="file-name">Educador.java</span>
+          <span class="file-badge b-todo">completar</span>
+          <span class="file-count" data-count>0/4</span>
+        </div>
+        <div class="task" data-id="a2e1"><div class="box">✓</div><div class="tx"><span class="dot d-g" style="display:inline-block;margin-right:6px;"></span>Definir la constante de costo de energía</div></div>
+        <div class="task" data-id="a2e2"><div class="box">✓</div><div class="tx"><span class="dot d-r" style="display:inline-block;margin-right:6px;"></span><code>publicarContenido()</code> con efecto propio</div></div>
+        <div class="task" data-id="a2e3"><div class="box">✓</div><div class="tx"><span class="dot d-y" style="display:inline-block;margin-right:6px;"></span><code>anunciarProducto()</code> recorriendo el arreglo de audiencia</div></div>
+        <div class="task" data-id="a2e4"><div class="box">✓</div><div class="tx"><span class="dot d-y" style="display:inline-block;margin-right:6px;"></span><code>bloquearHaters()</code> — contrato IModeracion</div></div>
+      </div>
+
+      <div class="file-group">
+        <div class="file-head">
+          <span class="file-name">MainActividad2.java</span>
+          <span class="file-badge b-todo">completar</span>
+          <span class="file-count" data-count>0/2</span>
+        </div>
+        <div class="task" data-id="a2m1"><div class="box">✓</div><div class="tx"><span class="dot d-r" style="display:inline-block;margin-right:6px;"></span><code>gestionarAgenda()</code>: ejecutar solo las acciones que cada creador <b>puede</b> hacer, usando <code>instanceof</code></div></div>
+        <div class="task" data-id="a2m2"><div class="box">✓</div><div class="tx"><span class="dot d-r" style="display:inline-block;margin-right:6px;"></span><code>simularEventoPromocion()</code>: elegir al azar a quiénes impacta, sin incluir al promotor</div></div>
+      </div>
+
+      <h3 class="sec">Experimento controlado</h3>
+      <div class="callout exp">
+        <b>Hacelo, lleva un minuto y se entiende para siempre.</b> Abrí <code style="font-family:var(--mono);color:#7DD3FC;">Gamer.java</code>
+        y comentá el método <code style="font-family:var(--mono);color:#7DD3FC;">anunciarProducto()</code>. Compilá.
+        <br><br>El error que aparece <em>es</em> la definición de "contrato": el compilador te obliga a cumplir la interfaz
+        entera, no a medias. Después descomentalo y seguí.
+      </div>
+
+      <h3 class="sec">Preguntas de comprensión</h3>
+      <details class="q">
+        <summary><span class="qmark">?</span><span>¿Qué error da <code>new Creador("test")</code> y por qué está bien que falle?</span></summary>
+        <div class="qbody">Probalo en el Main. Después preguntate: ¿qué debería hacer
+        <code style="font-family:var(--mono)">publicarContenido()</code> en un creador "genérico"? No hay respuesta
+        razonable — y por eso la clase es <strong>abstracta</strong>: representa un concepto, no algo que exista.</div>
+      </details>
+      <details class="q">
+        <summary><span class="qmark">?</span><span>¿Por qué los atributos van en la clase abstracta y las habilidades en interfaces?</span></summary>
+        <div class="qbody">Preguntate qué pasaría si <code style="font-family:var(--mono)">hacerFeat()</code> estuviera dentro de
+        <strong>Creador</strong>: el Educador quedaría obligado a tener un método que, según el enunciado,
+        no debería poder usar. Las interfaces permiten que cada tipo tenga <strong>solo</strong> las
+        habilidades que le corresponden.</div>
+      </details>
+      <details class="q">
+        <summary><span class="qmark">?</span><span>¿Por qué <code>simularEventoPromocion</code> recibe <code>IPromocion</code> y no <code>Gamer</code>?</span></summary>
+        <div class="qbody">Esta es la pregunta más importante de la actividad. Al pedir "algo que sepa promocionar"
+        en vez de "un Gamer", el método funciona igual con Gamer, con Educador, y con cualquier clase futura
+        que implemente la interfaz — <strong>sin tocar una línea</strong> de este método.</div>
+      </details>
+      <details class="q">
+        <summary><span class="qmark">?</span><span>En <code>gestionarAgenda()</code>, ¿por qué no alcanza con escribir <code>creador.hacerFeat(otro)</code>?</span></summary>
+        <div class="qbody">Probalo y leé el error. El parámetro está declarado como
+        <code style="font-family:var(--mono)">Creador</code>, y esa clase no conoce
+        <code style="font-family:var(--mono)">hacerFeat()</code>. El compilador solo te deja llamar a lo que el
+        <strong>tipo declarado</strong> garantiza. Ahí entra <code style="font-family:var(--mono)">instanceof</code> + casteo.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <b>Sobre la defensa oral.</b> Las preguntas de esta guía son las mismas que pueden hacerte en la
+    defensa en vivo. No hay sorpresa: si podés responderlas mirando tu código, estás listo.
+    Si tu programa funciona pero no podés explicar <em>por qué</em> escribiste una línea, esa línea no suma.
+  </div>
+
+  <button class="reset" id="reset">↺ reiniciar checklist</button>
+</div>
+
+<footer>Guía de actividades · Programación Orientada a Objetos — el progreso se guarda en este navegador</footer>
+
+<script>
+const KEY = 'guia_actividades_poo_v1';
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) { state = {}; }
+
+const tasks = [...document.querySelectorAll('.task')];
+
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+function refresh(){
+  let done = 0;
+  tasks.forEach(t => {
+    const on = !!state[t.dataset.id];
+    t.classList.toggle('done', on);
+    if(on) done++;
+  });
+  const pct = tasks.length ? Math.round(done / tasks.length * 100) : 0;
+  document.getElementById('pfill').style.width = pct + '%';
+  document.getElementById('plabel').textContent =
+    `${done} de ${tasks.length} tareas completadas  ·  ${pct}%`;
+
+  // contador por archivo
+  document.querySelectorAll('.file-group').forEach(g => {
+    const its = [...g.querySelectorAll('.task')];
+    const d = its.filter(t => state[t.dataset.id]).length;
+    const badge = g.querySelector('[data-count]');
+    if(badge) badge.textContent = `${d}/${its.length}`;
+  });
+}
+
+tasks.forEach(t => t.addEventListener('click', () => {
+  state[t.dataset.id] = !state[t.dataset.id];
+  save(); refresh();
+}));
+
+document.getElementById('reset').addEventListener('click', () => {
+  if(confirm('¿Reiniciar todo el checklist?')){ state = {}; save(); refresh(); }
+});
+
+refresh();
+</script>
+</body>
+</html>
