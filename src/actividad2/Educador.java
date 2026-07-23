@@ -47,7 +47,7 @@ public class Educador extends Creador implements IPromocion, IModeracion {
     public void anunciarProducto(Creador[] audiencia) {
         System.out.println("  " + nombreUsuario + " recomienda una plataforma de cursos online:");
         for (Creador c : audiencia) {
-            c.setPopularidad(c.getPopularidad() + 8);
+            c.aumentarPopularidad(8);
             System.out.println("    -> impacta a @" + c.getNombreUsuario() + " (+8 popularidad)");
         }
     }
@@ -58,7 +58,7 @@ public class Educador extends Creador implements IPromocion, IModeracion {
      */
     @Override
     public void bloquearHaters(Creador objetivo) {
-        objetivo.setEnergia(objetivo.getEnergia() + 10);
+        objetivo.aumentarEnergia(10);
         System.out.println("  " + nombreUsuario + " activa moderación para @" + objetivo.getNombreUsuario());
         System.out.println("  (@" + objetivo.getNombreUsuario() + " +10 energia)");
     }
