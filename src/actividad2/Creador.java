@@ -60,7 +60,7 @@ public abstract class Creador {
      */
     public void ganarSeguidores(int nuevos) {
         if (nuevos < 0) {
-            return; // no se admiten seguidores negativos
+            throw new IllegalArgumentException("No se pueden ganar seguidores negativos");
         }
         this.seguidores += nuevos;
         this.nivelCuenta = 1 + (this.seguidores / 1000);

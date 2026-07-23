@@ -128,11 +128,11 @@ public class MainActividad2 {
      */
     public static void simularEventoPromocion(IPromocion promotor) {
         // Convertimos el promotor a Creador para poder comparar identidad.
-        Creador promotorComoCreador = (Creador) promotor;
+        Creador promotorRef = (Creador) promotor;
 
         List<Creador> posibles = new ArrayList<>();
         for (Creador c : creadores) {
-            if (c != promotorComoCreador) {
+            if (c != promotorRef) {
                 posibles.add(c);
             }
         }
