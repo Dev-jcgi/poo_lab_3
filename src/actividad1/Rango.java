@@ -21,23 +21,20 @@ package actividad1;
  */
 public enum Rango {
 
-    // TODO 🟢 [1] Agregá a cada constante su nivel de autoridad entre paréntesis.
-    //             Ejemplo de la forma:  CABO(1),
-    //             Y no te olvides del punto y coma al final de la última.
-    CABO, SARGENTO, TENIENTE, CAPITAN;
+    // Cada constante llama al constructor con su nivel de autoridad.
+    CABO(1),
+    SARGENTO(2),
+    TENIENTE(3),
+    CAPITAN(4);   // <-- punto y coma OBLIGATORIO
 
-    // TODO 🟡 [2] Declará el atributo que guarda el nivel.
-    //             ¿Qué modificador impide que se pueda cambiar después?
+    private final int nivelAutoridad;
 
+    // Constructor implícitamente privado.
+    Rango(int nivelAutoridad) {
+        this.nivelAutoridad = nivelAutoridad;
+    }
 
-    // TODO 🟡 [3] Escribí el constructor que recibe el nivel y lo asigna.
-    //             Recordá: en un enum el constructor NO lleva "public".
-
-
-    /**
-     * TODO 🟢 [4] Hacé que devuelva el nivel real en vez del 0 fijo.
-     */
     public int getNivelAutoridad() {
-        return 0;
+        return nivelAutoridad;
     }
 }

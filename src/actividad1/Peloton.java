@@ -28,40 +28,32 @@ public class Peloton {
     private final Random random = new Random();
 
     /**
-     * TODO 🟡 [1] Generá todas las combinaciones posibles.
-     *
-     *   Estructura sugerida: un for-each ANIDADO dentro de otro.
-     *
-     *       for (Especialidad e : Especialidad.values()) {
-     *           for (Rango r : ... ) {
-     *               soldados.add( ... );
-     *           }
-     *       }
-     *
-     * TODO 🟢 [2] Después de generarlos, mezclalos llamando a mezclarPeloton().
+     * Genera todas las combinaciones posibles de especialidad × rango
+     * y luego mezcla el pelotón para simular variación.
      */
     public Peloton() {
-
+        for (Especialidad e : Especialidad.values()) {
+            for (Rango r : Rango.values()) {
+                soldados.add(new Soldado(e, r));
+            }
+        }
+        mezclarPeloton();
     }
 
     /**
-     * TODO 🟢 [3] Mezclá la lista para que el orden sea aleatorio.
-     *
-     *   Pista: la clase Collections ya tiene un método que hace exactamente
-     *   esto en una línea. Buscalo en la documentación de java.util.Collections.
+     * Mezcla la lista de soldados aleatoriamente.
+     * Collections.shuffle(...) reordena los elementos en su lugar.
      */
     public void mezclarPeloton() {
-
+        Collections.shuffle(soldados, random);
     }
 
     /**
-     * TODO 🟡 [4] Devolvé un soldado al azar de la lista.
-     *
-     *   Pista: random.nextInt(n) devuelve un entero entre 0 y n-1.
-     *   ¿Qué valor le tenés que pasar como n para no salirte de la lista?
+     * Devuelve un soldado al azar de la lista.
+     * nextInt(soldados.size()) devuelve un índice válido entre 0 y size-1.
      */
     public Soldado obtenerSoldadoAleatorio() {
-        return null;
+        return soldados.get(random.nextInt(soldados.size()));
     }
 
     /** Ya resuelto: te sirve para verificar que generaste los 16. */

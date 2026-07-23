@@ -22,41 +22,29 @@ package actividad1;
  */
 public class Soldado {
 
-    // TODO 🟡 [1] Declará los dos atributos: especialidad y rango.
-    //             ¿Qué modificador garantiza que no se puedan reasignar?
+    // private final: no se pueden reasignar después del constructor.
+    private final Especialidad especialidad;
+    private final Rango rango;
 
-
-    /**
-     * TODO 🟢 [2] Asigná los parámetros a los atributos.
-     */
     public Soldado(Especialidad especialidad, Rango rango) {
-
+        this.especialidad = especialidad;
+        this.rango = rango;
     }
 
-    /**
-     * TODO 🟢 [3] Devolvé la especialidad real (hoy devuelve null).
-     */
     public Especialidad getEspecialidad() {
-        return null;
+        return especialidad;
     }
 
-    /**
-     * TODO 🟢 [4] Devolvé el rango real (hoy devuelve null).
-     */
     public Rango getRango() {
-        return null;
+        return rango;
     }
 
     /**
-     * TODO 🟡 [5] Devolvé el texto con el formato del enunciado.
-     *
-     *   Esperado:  "CAPITAN INGENIERO"
-     *
-     *   Pista: sobre una constante de enum podés llamar a name() para
-     *   obtener su nombre como String. También podrías usar getSigla().
+     * Formato del enunciado: "RANGO ESPECIALIDAD".
+     * name() devuelve el nombre de la constante del enum como String.
      */
     @Override
     public String toString() {
-        return "[TODO: completar toString() de Soldado]";
+        return rango.name() + " " + especialidad.name();
     }
 }
