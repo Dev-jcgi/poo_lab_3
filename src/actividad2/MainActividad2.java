@@ -120,25 +120,16 @@ public class MainActividad2 {
     /**
      * Elegí al azar a quiénes les llega la promoción, excluyendo al promotor.
      *
-     * Pasos:
-     *   a) buscar en la lista global al promotor como Creador
-     *   b) armar una lista con los creadores que NO son el promotor
-     *   c) elegir al azar cuántos serán impactados (entre 1 y esa cantidad)
-     *   d) seleccionar ese subconjunto al azar
-     *   e) convertirlo a Creador[] y pasárselo al promotor
+     * Usamos el nombre de usuario como identidad en vez de comparar referencias,
+     * porque el parámetro está tipado como interfaz IPromocion. Todos los
+     * implementadores son Creador, y cada Creador tiene un nombre de usuario único.
      */
     public static void simularEventoPromocion(IPromocion promotor) {
-        Creador promotorRef = null;
-        for (Creador c : creadores) {
-            if (c == promotor) {
-                promotorRef = c;
-                break;
-            }
-        }
+        String nombrePromotor = ((Creador) promotor).getNombreUsuario();
 
         List<Creador> posibles = new ArrayList<>();
         for (Creador c : creadores) {
-            if (c != promotorRef) {
+            if (!c.getNombreUsuario().equals(nombrePromotor)) {
                 posibles.add(c);
             }
         }
